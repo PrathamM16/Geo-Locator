@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>City Exploration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #mapCanvas {
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+        }
+
+        #getLocationButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>City Exploration</h1>
+    </header>
+    <button id="getLocationButton">Get My Location</button>
+    <div id="mapCanvas" style="width: 100%; height: 500px;"></div>
+
+    <script type="text/javascript">
+        var map;
+        var userLocation;
+
+        function loadMap() {
+            // Replace with your Bing Maps API key
+            var bingMapsApiKey = "AsD9cnlmlDaYz-uHpgZxEgvb0cxICe-W0UXex1RFXa8-YajpkXUfCgXg_OpYeeyS";
+
+            // Load Bing Maps API
+            map = new Microsoft.Maps.Map(document.getElementById('mapCanvas'), {
+                credentials: bingMapsApiKey,
+                mapTypeId: Microsoft.Maps.MapTypeId.birdseye, // Set map view mode to Bird's Eye
+                center: new Microsoft.Maps.Location(47.6097, -122.3331), // Default center (Seattle)
+                zoom: 15
+            });
+        }
+
+        function locateSuccess(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+            userLocation = new Microsoft.Maps.Location(latitude, longitude);
+
+            // Set Bing Maps view to user's location and zoom in
+            map.setView({ center: userLocation, zoom: 18 });
+
+            // Add a pushpin to mark the user's location
+            var pin = new Microsoft.Maps.Pushpin(userLocation, { color: 'blue' });
+            map.entities.push(pin);
+        }
+
+        function locateFail(error) {
+            alert("Geolocation failed. Error: " + error.message);
+        }
+
+        function getLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(locateSuccess, locateFail);
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+
+        // Attach click event to the "Get My Location" button
+        document.getElementById("getLocationButton").addEventListener("click", getLocation);
+
+        // Load Bing Maps after page load
+        window.onload = loadMap;
+
+        // Load Bing Maps API
+    map = new Microsoft.Maps.Map(document.getElementById('mapCanvas'), {
+    credentials: bingMapsApiKey,
+    mapTypeId: Microsoft.Maps.MapTypeId.birdseye, // Set map view mode to Bird's Eye
+    center: new Microsoft.Maps.Location(47.6097, -122.3331), // Default center (Seattle)
+    zoom: 15
+    });
+
+    </script>
+    <script type="text/javascript" src='https://www.bing.com/api/maps/mapcontrol?key=AsD9cnlmlDaYz-uHpgZxEgvb0cxICe-W0UXex1RFXa8-YajpkXUfCgXg_OpYeeyS'></script>
+</body>
+</html>
